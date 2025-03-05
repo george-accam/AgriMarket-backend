@@ -9,7 +9,11 @@ connectDB();
 app.use(express.json());
 app.use('/api', userRoute);
 
-
+app.get('/', (req, res) => {
+    res.status(200).json({ 
+        message: "Welcome to the AgriMarket API" 
+    });
+});
 
 
 

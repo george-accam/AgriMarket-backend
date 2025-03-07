@@ -1,4 +1,4 @@
-import { secretKey } from "../middleware/Secretkey.js";
+import { secretKey } from "./Secretkey.js";
 import jwt from 'jsonwebtoken';
 
 export const generateToken = (user) => {

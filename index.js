@@ -9,6 +9,9 @@ connectDB();
 
 app.use(express.json());
 
+//  The use of the static folder
+app.use(express.static("public"));
+
 app.use('/api', userRoute);
 app.use("/api", fileRoute);
 

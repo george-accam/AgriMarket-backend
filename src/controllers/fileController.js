@@ -4,7 +4,7 @@ import path from "path";
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, "src/uploadedFiles");
+        cb(null, "public/uploadedFiles");
     },
     filename: (req, file, cb) => {
         cb(null, file.fieldname + "_" + Date.now() + path.extname(file.originalname));
@@ -16,7 +16,7 @@ export const uploadFile = upload.array("files");
 
 export const uploadFileInformation = async (req, res) => {
     const file = req.files;
-    const { fileName, category, description, price, farmerName } = req.body;
+    const { userId, fileName, category, description, price, farmerName } = req.body;
     console.log(file);
 
     if (!file) {
@@ -33,10 +33,34 @@ export const uploadFileInformation = async (req, res) => {
         });
         const savedFile = await newFile.save();
 
-        res.status(201).json({ success: true, message: "file uploaded successfully", files: savedFile });
-    } catch (error) {
+        const newFileInfo = new FileInfo({
+            userId: userId,
+            filePath: newFile.fileUrl,
+            fileName: fileName,
+            category: category,
+            description: description,
+            price: price,
+            farmerName: farmerName,
+        });
+        const savedFileInfo = await newFileInfo.save();
+
+        res.status(201).json({ success: true, message: "file uploaded successfully", files: savedFile, filesInfo: savedFileInfo });
+    } 
+    catch (error) {
         res.status(500).json({ message: `Internal server error: ${error.message}` });
     }
 };
 
 
+export  const getFilesInfo = async (req, res) => {
+    try {
+        const filesInfo = await FileInfo.find();
+        if(!filesInfo) {
+            res.status(404).json({ message: "no file information found" });
+        }
+        res.status(200).json({ success: true, message: "file information retrieved successfully", filesInfo: filesInfo });
+        
+    } catch (error) {
+        res.status(500).json({ message: `Internal server error: ${error.message}` });
+    }
+};

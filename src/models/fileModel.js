@@ -28,8 +28,13 @@ export const File = mongoose.model("file", fileSchema);
 
 // file information
 const fileInfoSchema = new mongoose.Schema({
+    userId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user",
+        required: true,
+    },
     filePath: {
-        type: String,
+        type: [String],
         required: true,
     },
     fileName:{
